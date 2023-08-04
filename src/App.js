@@ -1,25 +1,57 @@
-import logo from './logo.svg';
-import './App.css';
+import React from "react";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
+import Main from './layouts/Main';
+import NotFound from "./pages/NotFound";
 
-function App() {
+import publicRoutes from "./routes/PublicRoutes";
+import protectedRoutes from "./routes/ProtectedRoutes";
+
+// import css
+import "./assets/css/remixicon.css";
+
+// import scss
+import "./scss/style.scss";
+
+
+// set skin on load
+window.addEventListener("load", function () {
+  let skinMode = localStorage.getItem("skin-mode");
+  let HTMLTag = document.querySelector("html");
+
+  if (skinMode) {
+    HTMLTag.setAttribute("data-skin", skinMode);
+  }
+});
+
+export default function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <React.Fragment>
+      <BrowserRouter>
+        <Routes>
+          <Route path="/" element={<Main />}>
+            {protectedRoutes.map((route, index) => {
+              return (
+                <Route
+                  path={route.path}
+                  element={route.element}
+                  key={index}
+                />
+              )
+            })}
+          </Route>
+          {publicRoutes.map((route, index) => {
+            return (
+              <Route
+                path={route.path}
+                element={route.element}
+                key={index}
+              />
+            )
+          })}
+          <Route path="*" element={<NotFound />} />
+        </Routes>
+      </BrowserRouter>
+    </React.Fragment>
+    
   );
 }
-
-export default App;
