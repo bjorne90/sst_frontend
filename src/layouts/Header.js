@@ -179,8 +179,8 @@ export default function Header({ onSkin }) {
         <Dropdown.Menu className="mt-10-f">
           <div className="dropdown-menu-body">
             <div className="avatar avatar-xl online mb-3"><img src={userAvatar} alt="" /></div>
-            <h5 className="mb-1 text-dark fw-semibold">{user.user.first_name} {user.user.last_name}</h5>
-            <p className="fs-sm text-secondary">{user.work_title}</p>
+            <h5 className="mb-1 text-dark fw-semibold">{user.user ? `${user.user.first_name} ${user.user.last_name}` : 'Loading...'}</h5>
+<p className="fs-sm text-secondary">{user.work_title || 'Loading...'}</p>
 
             <nav className="nav">
               <Link to=""><i className="ri-edit-2-line"></i> Redigera Profil</Link>

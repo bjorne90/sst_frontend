@@ -1,9 +1,12 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { Card, Col, Nav, Row } from "react-bootstrap";
 import Footer from "../layouts/Footer";
 import HeaderMobile from "../layouts/HeaderMobile";
 import Avatar from "../components/Avatar";
+import axios from "axios";
+
+
 
 import img1 from "../assets/img/img1.jpg";
 import img5 from "../assets/img/img5.jpg";
@@ -16,6 +19,27 @@ import img11 from "../assets/img/img11.jpg";
 import img12 from "../assets/img/img12.jpg";
 
 export default function Profile() {
+  const [user, setUser] = useState({});
+
+  useEffect(() => {
+    const fetchUserData = async () => {
+      try {
+        const token = localStorage.getItem('access_token');
+        const userId = localStorage.getItem('user_id');
+        const response = await axios.get(`http://localhost:8000/api/profiles/${userId}/`, {
+          headers: {
+            'Authorization': `Bearer ${token}`
+          }
+        });
+        setUser(response.data);
+      } catch (err) {
+        console.error(err);
+      }
+    };
+
+    fetchUserData();
+  }, []);
+
   return (
     <React.Fragment>
       <HeaderMobile />
@@ -27,9 +51,9 @@ export default function Profile() {
                 <img src={img1} className="img-fluid" alt="..." />
               </div>
               <div className="media-body">
-                <h5 className="media-name">Shaira Diaz</h5>
-                <p className="d-flex gap-2 mb-4"><i className="ri-map-pin-line"></i> San Francisco, California</p>
-                <p className="mb-0">Redhead, Innovator, Saviour of Mankind, Hopeless Romantic, Attractive 20-something Yogurt Enthusiast. You can replace this with any content and adjust it as needed... <Link to="">Read more</Link></p>
+                <h5 className="media-name">{user.user ? `${user.user.first_name} ${user.user.last_name}` : 'Loading...'}</h5>
+                <p className="d-flex gap-2 mb-4"><i className="ri-map-pin-line"></i> {user.work_title || 'Loading...'}</p>
+                <p className="mb-0">{user.about_me || 'Loading...'}</p>
               </div>
             </div>
 
